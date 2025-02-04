@@ -78,7 +78,7 @@
 
   .hero__video--mask {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg max-sm:size-30;
+    @apply top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-100 size-64 cursor-pointer overflow-hidden rounded-lg ;
   }
 }
 

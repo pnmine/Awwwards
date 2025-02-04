@@ -111,12 +111,12 @@ const Hero = () => {
 			)}
 
 			<div id="video-frame" className="hero__video">
-				<div className="hero__video--mask">
+				<div className="hero__video--mask max-sm:size-30">
 					<div
 						onClick={handleMiniVideoClick}
-						className="origin-center scale-50 opacity-0 
-						transition-all duration-500 ease-in hover:scale-100 
-						hover:opacity-100 max-sm:opacity-100 max-sm:scale-100 "
+						className="origin-center sm:scale-50 sm:opacity-0 
+						transition-all duration-500 ease-in-out hover:scale-100 
+						hover:opacity-100 opacity-100 scale-100 "
 					>
 						<video
 							ref={nextVideoRef}
