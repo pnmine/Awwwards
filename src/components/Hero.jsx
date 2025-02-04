@@ -116,6 +116,7 @@ const Hero = () => {
 							id="current-video"
 							className="size-64 origin-center scale-150 object-cover"
 							onLoadedData={handleVideoLoad}
+							preload="auto"
 						></video>
 					</div>
 				</div>
@@ -127,6 +128,7 @@ const Hero = () => {
 					id="next-video"
 					className="absolute-center z-20 size-64 object-cover invisible"
 					onLoadedData={handleVideoLoad}
+					preload="auto"
 				></video>
 				<video
 					src={getVideoSource(currentIndex)}
@@ -135,6 +137,7 @@ const Hero = () => {
 					muted
 					className="absolute left-0 top-0 size-full object-cover object-center "
 					onLoadedData={handleVideoLoad}
+					preload="auto"
 				></video>
 
 				<h1
