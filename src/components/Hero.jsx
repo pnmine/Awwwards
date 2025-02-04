@@ -38,7 +38,7 @@ const Hero = () => {
 		setCurrentIndex(upcomingVideoIndex);
 	};
 
-	const getVideoSource = (index) => `/awwwards/videos/hero-${index}.mp4`;
+	const getVideoSource = (index) => `./videos/hero-${index}.mp4`;
 
 	//mini player animate
 	useGSAP(
@@ -139,7 +139,7 @@ const Hero = () => {
 
 				<h1
 					className="special-font hero-heading absolute bottom-5 
-										right-5 z-40 text-blue-75 transition-all ease-in px-5 sm:px-10"
+										right-5 z-40 text-blue-75 transition-all ease-in max-sm:px-5"
 				>
 					G<b>A</b>MING
 				</h1>
@@ -164,7 +164,7 @@ const Hero = () => {
 
 			<h1
 				className="special-font hero-heading absolute 
-									bottom-5 right-5 text-black px-5 sm:px-10"
+									bottom-5 right-5 text-black max-sm:px-5"
 			>
 				G<b>A</b>MING
 			</h1>
