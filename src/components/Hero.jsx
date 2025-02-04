@@ -26,6 +26,8 @@ const Hero = () => {
 		}
 	}, [loadedVideos]);
 
+	const loadingProgress = Math.round((loadedVideos / totalVideos) * 100);
+
 	const upcomingVideoIndex = (currentIndex % totalVideos) + 1;
 	const handleMiniVideoClick = () => {
 		setHasClicked(true);
@@ -91,6 +93,9 @@ const Hero = () => {
 						<div className="three-body__dot"></div>
 						<div className="three-body__dot"></div>
 						<div className="three-body__dot"></div>
+					</div>
+					<div className="absolute bottom-10 text-blue-900">
+						Loading... {loadingProgress}%
 					</div>
 				</div>
 			)}
