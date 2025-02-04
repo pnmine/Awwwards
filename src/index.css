@@ -99,7 +99,7 @@
   }
 
   .hero-heading {
-    @apply uppercase font-zentry font-black text-9xl sm:right-10 sm:text-[10rem] md:text-[12rem] lg:text-[14rem];
+    @apply uppercase font-zentry font-black text-8xl sm:right-10 sm:text-[10rem] md:text-[12rem] lg:text-[14rem];
   }
 
 }

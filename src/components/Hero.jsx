@@ -36,7 +36,7 @@ const Hero = () => {
 		setCurrentIndex(upcomingVideoIndex);
 	};
 
-	const getVideoSource = (index) => `videos/hero-${index}.mp4`;
+	const getVideoSource = (index) => `/awwwards/videos/hero-${index}.mp4`;
 
 	//mini player animate
 	useGSAP(
