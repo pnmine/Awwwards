@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
 	const [currentIndex, setCurrentIndex] = useState(1);
@@ -21,12 +21,10 @@ const Hero = () => {
 	};
 
 	useEffect(() => {
-		if (loadedVideos === totalVideos - 1) {
+		if (loadedVideos === totalVideos ) {
 			setIsLoading(false);
 		}
 	}, [loadedVideos]);
-
-	const loadingProgress = Math.round((loadedVideos / totalVideos) * 100);
 
 	const upcomingVideoIndex = (currentIndex % totalVideos) + 1;
 	const handleMiniVideoClick = () => {
@@ -53,7 +51,10 @@ const Hero = () => {
 					height: "100%",
 					duration: 1, //ระยะเวลาของแอนิเมชันคือ 1 วินาที
 					ease: "power1.inOut", // ใช้การเคลื่อนไหวแบบ power1.inOut เพื่อให้แอนิเมชันมีการเร่งและชะลอที่นุ่มนวล
-					onStart: () => nextVideoRef.current.play(), //เมื่อแอนิเมชันเริ่มต้น จะเรียกฟังก์ชันเพื่อเล่นวิดีโอที่อ้างอิงโดย nextVideoRef.current
+					onStart: () => {
+						nextVideoRef.current.playsInline = true;
+						nextVideoRef.current.play();
+					}, //เมื่อแอนิเมชันเริ่มต้น จะเรียกฟังก์ชันเพื่อเล่นวิดีโอที่อ้างอิงโดย nextVideoRef.current
 				});
 				gsap.from("#current-video", {
 					transformOrigin: "center center",
@@ -85,6 +86,18 @@ const Hero = () => {
 		});
 	});
 
+	useEffect(() => {
+		gsap.to(".hero__video--mask", {
+			scale: 1.2,
+			clipPath: "polygon(1% 0%, 100% 0%, 95% 95%, 0% 100%)",
+			duration: 1,
+			yoyo: true,
+			repeat: -1,
+			ease: "power1.inOut",
+		});
+
+	}, []);
+
 	return (
 		<div className="hero">
 			{isLoading && (
@@ -94,9 +107,7 @@ const Hero = () => {
 						<div className="three-body__dot"></div>
 						<div className="three-body__dot"></div>
 					</div>
-					<div className="absolute bottom-10 text-blue-900">
-						Loading... {loadingProgress}%
-					</div>
+					<div className="absolute bottom-10 text-blue-900">Loading...{loadedVideos} / {totalVideos} </div>
 				</div>
 			)}
 
@@ -106,7 +117,7 @@ const Hero = () => {
 						onClick={handleMiniVideoClick}
 						className="origin-center scale-50 opacity-0 
 						transition-all duration-500 ease-in hover:scale-100 
-						hover:opacity-100 "
+						hover:opacity-100 max-sm:opacity-100 max-sm:scale-100 "
 					>
 						<video
 							ref={nextVideoRef}
@@ -114,9 +125,10 @@ const Hero = () => {
 							loop
 							muted
 							id="current-video"
-							className="size-64 origin-center scale-150 object-cover"
-							onLoadedData={handleVideoLoad}
+							className=" size-64 origin-center scale-150 object-cover pointer-events-none"
 							preload="auto"
+							playsInline
+							
 						></video>
 					</div>
 				</div>
@@ -126,18 +138,50 @@ const Hero = () => {
 					loop
 					muted
 					id="next-video"
-					className="absolute-center z-20 size-64 object-cover invisible"
-					onLoadedData={handleVideoLoad}
+					className="absolute-center z-20 size-64 object-cover invisible pointer-events-none"
 					preload="auto"
+					playsInline
 				></video>
 				<video
 					src={getVideoSource(currentIndex)}
 					autoPlay
 					loop
 					muted
-					className="absolute left-0 top-0 size-full object-cover object-center "
+					className="absolute left-0 top-0 size-full object-cover object-center pointer-events-none"
 					onLoadedData={handleVideoLoad}
 					preload="auto"
+					playsInline
+				></video>
+				{/* Preload on IOS */}
+				<video
+					src={getVideoSource(currentIndex + 1)}
+					autoPlay
+					loop
+					muted
+					className="invisible"
+					onLoadedData={handleVideoLoad}
+					preload="auto"
+					playsInline
+				></video>
+				<video
+					src={getVideoSource(currentIndex + 2)}
+					autoPlay
+					loop
+					muted
+					className="invisible "
+					onLoadedData={handleVideoLoad}
+					preload="auto"
+					playsInline
+				></video>
+				<video
+					src={getVideoSource(currentIndex + 3)}
+					autoPlay
+					loop
+					muted
+					className="invisible "
+					onLoadedData={handleVideoLoad}
+					preload="auto"
+					playsInline
 				></video>
 
 				<h1
