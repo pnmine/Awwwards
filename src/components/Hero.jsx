@@ -139,7 +139,7 @@ const Hero = () => {
 
 				<h1
 					className="special-font hero-heading absolute bottom-5 
-										right-5 z-40 text-blue-75 transition-all ease-in"
+										right-5 z-40 text-blue-75 transition-all ease-in px-5 sm:px-10"
 				>
 					G<b>A</b>MING
 				</h1>
@@ -164,7 +164,7 @@ const Hero = () => {
 
 			<h1
 				className="special-font hero-heading absolute 
-									bottom-5 right-5 text-black"
+									bottom-5 right-5 text-black px-5 sm:px-10"
 			>
 				G<b>A</b>MING
 			</h1>
