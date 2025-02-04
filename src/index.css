@@ -1,0 +1,213 @@
+@import url("https://fonts.cdnfonts.com/css/general-sans");
+@import "tailwindcss";
+@layer theme, base, components, utilities;
+
+
+@theme {
+  /* // สำหรับการเรียกใช้ผ่าน className  */
+  --font-circular-web: 'circular-web', sans-serif;
+  --font-general: 'general', sans-serif;
+  --font-robert-medium: 'robert-medium', sans-serif;
+  --font-robert-regular: 'robert-regular', sans-serif;
+  --font-zentry: 'zentry', sans-serif;
+
+  --color-blue-50: #DFDFF0;
+  --color-blue-75: #DFDFF2;
+  --color-blue-100: #F0F2FA;
+  --color-blue-200: #010101;
+  --color-blue-300: #4FB7DD;
+
+  --color-violet-300: #5724FF;
+
+  --color-yellow-100: #8E983F;
+  --color-yellow-300: #EDFF66;
+}
+
+@layer base {
+
+  /* Font Local */
+  @font-face {
+    font-family: "circular-web";
+    src: url('/fonts/circularweb-book.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: "general";
+    src: url('/fonts/general.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: "robert-medium";
+    src: url('/fonts/robert-medium.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: "robert-regular";
+    src: url('/fonts/robert-regular.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: "zentry";
+    src: url('/fonts/zentry-regular.woff2') format('woff2');
+  }
+
+  body {
+    font-family: 'general', sans-serif;
+    width: 100dvw;
+    /* 100% of the viewport width */
+    background-color: #dfdff0;
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+  }
+
+  main {
+    @apply min-h-screen relative w-screen overflow-x-hidden;
+  }
+}
+
+/* components ใช้สำหรับ class ที่เฉพาะเจาะจงกับ component ใด component หนึ่ง ทำให้สามารถจัดการและแก้ไขได้ง่ายขึ้น*/
+@layer components {
+
+  .hero {
+    @apply relative h-dvh w-screen overflow-x-hidden;
+  }
+
+  .hero__video {
+    @apply relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75;
+  }
+
+  .hero__video--mask {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg;
+
+  }
+}
+
+/* utilities ใช้สำหรับ class ที่สามารถนำไปใช้ได้ทั่วไปในหลายๆ component ทำให้สามารถนำกลับมาใช้ซ้ำได้ง่าย*/
+@layer utilities {
+  .mask-clip-path {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .absolute-center {
+    @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%];
+  }
+
+  .special-font b {
+    font-family: "Zentry";
+    font-feature-settings: "ss01" on;
+  }
+
+  .hero-heading {
+    @apply uppercase font-zentry font-black text-9xl sm:right-10 sm:text-[10rem] md:text-[12rem] lg:text-[14rem];
+  }
+
+}
+
+
+
+
+/* From Uiverse.io by G4b413l */
+/* https://uiverse.io/G4b413l/tidy-walrus-92 */
+.three-body {
+  --uib-size: 35px;
+  --uib-speed: 0.8s;
+  --uib-color: #5d3fd3;
+  position: relative;
+  display: inline-block;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+}
+
+.three-body__dot {
+  position: absolute;
+  height: 100%;
+  width: 30%;
+}
+
+.three-body__dot:after {
+  content: "";
+  position: absolute;
+  height: 0%;
+  width: 100%;
+  padding-bottom: 100%;
+  background-color: var(--uib-color);
+  border-radius: 50%;
+}
+
+.three-body__dot:nth-child(1) {
+  bottom: 5%;
+  left: 0;
+  transform: rotate(60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(1)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite ease-in-out;
+  animation-delay: calc(var(--uib-speed) * -0.3);
+}
+
+.three-body__dot:nth-child(2) {
+  bottom: 5%;
+  right: 0;
+  transform: rotate(-60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(2)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15)
+    ease-in-out;
+}
+
+.three-body__dot:nth-child(3) {
+  bottom: -5%;
+  left: 0;
+  transform: translateX(116.666%);
+}
+
+.three-body__dot:nth-child(3)::after {
+  top: 0;
+  left: 0;
+  animation: wobble2 var(--uib-speed) infinite ease-in-out;
+}
+
+@keyframes spin78236 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble1 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(-66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+@keyframes wobble2 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
