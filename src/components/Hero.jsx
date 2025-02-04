@@ -89,7 +89,6 @@ const Hero = () => {
 	useEffect(() => {
 		gsap.to(".hero__video--mask", {
 			scale: 1.2,
-			clipPath: "polygon(1% 0%, 100% 0%, 95% 95%, 0% 100%)",
 			duration: 1,
 			yoyo: true,
 			repeat: -1,
