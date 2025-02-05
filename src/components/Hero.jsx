@@ -12,6 +12,7 @@ const Hero = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadedVideos, setLoadedVideos] = useState(0);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [currentVideoTime, setCurrentVideoTime] = useState(0);
 
 	const totalVideos = 4;
 	const miniVideoRef = useRef(null);
@@ -42,46 +43,58 @@ const Hero = () => {
 
 		const upcomingIndex = getUpcomingIndex();
 
-		gsap
-			.timeline()
+		 // Prepare next video without cloning
+        if (nextVideoRef.current) {
+            nextVideoRef.current.src = getVideoSource(upcomingIndex);
+            nextVideoRef.current.currentTime = 0;
+            nextVideoRef.current.play();
+        }
+
+		gsap.timeline()
 			.set(nextVideoRef.current, { 
 				visibility: "visible",
 				scale: 0.5,
 				width: "256px",
 				height: "256px",
+				opacity: 0
 			})
 			.to(".hero__video--mask", {
 				scale: 0.7,
 				duration: 0.1,
-				ease: "power1.inOut",
+				ease: "power2.inOut",
 				onStart: () => {
 					if (miniVideoRef.current) {
 						miniVideoRef.current.src = getVideoSource(upcomingIndex + 1);
 					}
-					nextVideoRef.current.play();
 				}
 			})
-			// Start expanding nextVideoRef while mask is still small
 			.to(nextVideoRef.current, {
 				scale: 1,
 				width: "100%",
 				height: "100%",
-				duration: 1.5,
-				ease: "power1.inOut",
-			}, "-=0.5") // Start 0.5s before previous animation ends
-			// Restore mask scale at the same time nextVideoRef finishes
-			.to(".hero__video--mask", {
-				scale: 1,
-				duration: 1,
-				ease: "power1.inOut",
+				opacity: 1,
+				duration: 0.8,
+				ease: "power2.inOut",
+			}, "<")
+			.add(() => {
+				// Sync background video with next video's current time
+                if (backgroundVideoRef.current && nextVideoRef.current) {
+                    const syncTime = nextVideoRef.current.currentTime;
+                    backgroundVideoRef.current.src = getVideoSource(upcomingIndex);
+                    backgroundVideoRef.current.onloadedmetadata = () => {
+                        backgroundVideoRef.current.currentTime = syncTime;
+                        backgroundVideoRef.current.play().catch(() => {});
+                        backgroundVideoRef.current.onloadedmetadata = null;
+                    };
+                }
+			}, "-=0.3") // Sync slightly before next video fades out
+			.to(nextVideoRef.current, {
+				opacity: 0,
+				duration: 0.3,
+				ease: "power2.inOut",
 				onComplete: () => {
 					setCurrentIndex(upcomingIndex);
 					setIsAnimating(false);
-
-					if (backgroundVideoRef.current) {
-						backgroundVideoRef.current.src = getVideoSource(upcomingIndex);
-						backgroundVideoRef.current.play();
-					}
 
 					if (nextVideoRef.current) {
 						gsap.set(nextVideoRef.current, {
@@ -92,8 +105,13 @@ const Hero = () => {
 						});
 						nextVideoRef.current.src = getVideoSource(getUpcomingIndex());
 					}
-				},
-				}, "-=1"); // Start 1s before video expansion ends
+				}
+			})
+			.to(".hero__video--mask", {
+				scale: 1,
+				duration: 0.3,
+				ease: "power2.out",
+			}, "-=0.3");
 	};
 
 	useGSAP(() => {
@@ -231,3 +249,4 @@ const Hero = () => {
 };
 
 export default Hero;
+
