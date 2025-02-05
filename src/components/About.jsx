@@ -2,6 +2,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import React from "react";
 import { ScrollTrigger } from "gsap/all";
+import AnimatedTitle from "./AnimatedTitle";
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
@@ -18,8 +19,8 @@ const About = () => {
 				},
 			});
 
-      // ให้ element ที่มี class .mask-clip-path ทำ animation โดยเปลี่ยนค่า width, height, borderRadius เมื่อ scroll
-			clipAnimation.to(".mask-clip-path", { 
+			// ให้ element ที่มี class .mask-clip-path ทำ animation โดยเปลี่ยนค่า width, height, borderRadius เมื่อ scroll
+			clipAnimation.to(".mask-clip-path", {
 				width: "100vw",
 				height: "100vh",
 				borderRadius: 0,
@@ -35,11 +36,15 @@ const About = () => {
 					Welcome to Zentry
 				</h2>
 
-				<div className="special-font mt-5 text-center text-4xl uppercase leading-[0.8] md:text-[6rem]">
-					Disc<b>o</b>ver the world's <br /> largest shared <b>a</b>dventure
-				</div>
+				<AnimatedTitle
+					title="Disc<b>o</b>ver the world's <br /> largest shared <b>a</b>dventure"
+          containerClass="mt-5 !text-black text-center"
+				/>
+
 				<div className="about__subtext">
-					<p className="text-black">The Metagame begins—your life, now an epic MMORPG</p>
+					<p className="text-black">
+						The Metagame begins—your life, now an epic MMORPG
+					</p>
 					<p>
 						Zentry is the unified play layer that bridges players, agentic AI,
 						and blockchains, creating a new economic paradigm.

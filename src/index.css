@@ -78,10 +78,10 @@
 
   .hero__video--mask {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    @apply top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-100 size-32 cursor-pointer overflow-hidden rounded-lg ;
+    @apply top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-100 size-32 cursor-pointer overflow-hidden rounded-lg;
   }
 
-  .about__container{
+  .about__container {
     @apply relative mb-8 mt-36 flex flex-col items-center gap-5;
   }
 
@@ -93,7 +93,7 @@
     @apply absolute left-1/2 top-0 z-20 h-[60vh] w-96 origin-center -translate-x-1/2 overflow-hidden rounded-3xl md:w-[30vw];
   }
 
-  
+
 }
 
 /* utilities ใช้สำหรับ class ที่สามารถนำไปใช้ได้ทั่วไปในหลายๆ component ทำให้สามารถนำกลับมาใช้ซ้ำได้ง่าย*/
@@ -106,13 +106,31 @@
     @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%];
   }
 
+  .hero-heading {
+    @apply uppercase font-zentry font-black text-8xl sm:right-10 sm:text-[10rem] md:text-[12rem] lg:text-[14rem];
+  }
+
+
   .special-font b {
     font-family: "Zentry";
     font-feature-settings: "ss01" on;
   }
 
-  .hero-heading {
-    @apply uppercase font-zentry font-black text-8xl sm:right-10 sm:text-[10rem] md:text-[12rem] lg:text-[14rem];
+
+  .animated-title {
+    @apply flex flex-col gap-1 text-7xl uppercase leading-[.8] text-white sm:px-5 sm:text-[6rem] md:text-[4rem];
+  }
+
+  .animated-word b {
+    font-family: "Zentry";
+    font-feature-settings: "ss01" on;
+  }
+
+  .animated-word {
+    @apply font-zentry font-black opacity-0;
+    transform: translate3d(107.977px, 51.303px, -59.3966px) rotateY(50deg) rotateX(-20deg);
+    transform-origin: 50% 50% -150px !important;
+    will-change: opacity, transform;
   }
 
 }
@@ -173,8 +191,7 @@
 .three-body__dot:nth-child(2)::after {
   bottom: 0;
   left: 0;
-  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15)
-    ease-in-out;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
 }
 
 .three-body__dot:nth-child(3) {
@@ -200,6 +217,7 @@
 }
 
 @keyframes wobble1 {
+
   0%,
   100% {
     transform: translateY(0%) scale(1);
@@ -213,6 +231,7 @@
 }
 
 @keyframes wobble2 {
+
   0%,
   100% {
     transform: translateY(0%) scale(1);
