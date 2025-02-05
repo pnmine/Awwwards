@@ -9,72 +9,101 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
 	const [currentIndex, setCurrentIndex] = useState(1);
-	const [hasClicked, setHasClicked] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadedVideos, setLoadedVideos] = useState(0);
+	const [isAnimating, setIsAnimating] = useState(false);
 
 	const totalVideos = 4;
+	const miniVideoRef = useRef(null);
 	const nextVideoRef = useRef(null);
+	const backgroundVideoRef = useRef(null);
 
 	const handleVideoLoad = () => {
 		setLoadedVideos((prev) => prev + 1);
 	};
 
 	useEffect(() => {
-		if (loadedVideos === totalVideos ) {
+		if (loadedVideos === totalVideos) {
 			setIsLoading(false);
 		}
 	}, [loadedVideos]);
 
-	const upcomingVideoIndex = (currentIndex % totalVideos) + 1;
-	const handleMiniVideoClick = () => {
-		setHasClicked(true);
-		// 0%4 = 0 + 1 => 1
-		// 1%4 = 1 +1 => 2 ..
-		// ..
-		// 4%4 = 0 +1 => 1
-		setCurrentIndex(upcomingVideoIndex);
+	const getVideoSource = (index) => {
+		// Handle wrapping around to 1 when we exceed totalVideos
+		const normalizedIndex = ((index - 1) % totalVideos) + 1;
+		return `./videos/hero-${normalizedIndex}.mp4`;
 	};
 
-	const getVideoSource = (index) => `./videos/hero-${index}.mp4`;
+	const getUpcomingIndex = () => (currentIndex % totalVideos) + 1;
 
-	//mini player animate
-	useGSAP(
-		() => {
-			if (hasClicked) {
-				gsap.set("#next-video", { visibility: "visible" });
-				gsap.to("#next-video", {
-					// ขยายเต็มขนาดภายใน 1 วินาที และเล่นวิดีโอเมื่อเริ่มแอนิเมชัน
-					transformOrigin: "center center", //กำหนดจุดเริ่มต้นของการแปลง (transform) ให้อยู่ที่กึ่งกลางขององค์ประกอบ
-					scale: 1, //ขนาดขององค์ประกอบจะถูกปรับเป็น 1 เท่า (ไม่มีการขยายหรือย่อ)
-					width: "100%", // ความกว้างขององค์ประกอบจะถูกปรับเป็น 100%
-					height: "100%",
-					duration: 1, //ระยะเวลาของแอนิเมชันคือ 1 วินาที
-					ease: "power1.inOut", // ใช้การเคลื่อนไหวแบบ power1.inOut เพื่อให้แอนิเมชันมีการเร่งและชะลอที่นุ่มนวล
-					onStart: () => {
-						nextVideoRef.current.playsInline = true;
-						nextVideoRef.current.play();
-					}, //เมื่อแอนิเมชันเริ่มต้น จะเรียกฟังก์ชันเพื่อเล่นวิดีโอที่อ้างอิงโดย nextVideoRef.current
-				});
-				gsap.from("#current-video", {
-					transformOrigin: "center center",
-					scale: 0, //ขยายจากขนาด 0 -> ปกติ ภายใน 1.5 วินาที
-					duration: 1.5,
-					ease: "power1.inOut",
-				});
-			}
-		},
-		{ dependencies: [currentIndex], revertOnUpdate: true }
-	);
+	const handleMiniVideoClick = () => {
+		if (isAnimating) return;
+		setIsAnimating(true);
+
+		const upcomingIndex = getUpcomingIndex();
+
+		gsap
+			.timeline()
+			.set(nextVideoRef.current, { 
+				visibility: "visible",
+				scale: 0.5,
+				width: "256px",
+				height: "256px",
+			})
+			.to(".hero__video--mask", {
+				scale: 0.7,
+				duration: 0.1,
+				ease: "power1.inOut",
+				onStart: () => {
+					if (miniVideoRef.current) {
+						miniVideoRef.current.src = getVideoSource(upcomingIndex + 1);
+					}
+					nextVideoRef.current.play();
+				}
+			})
+			// Start expanding nextVideoRef while mask is still small
+			.to(nextVideoRef.current, {
+				scale: 1,
+				width: "100%",
+				height: "100%",
+				duration: 1.5,
+				ease: "power1.inOut",
+			}, "-=0.5") // Start 0.5s before previous animation ends
+			// Restore mask scale at the same time nextVideoRef finishes
+			.to(".hero__video--mask", {
+				scale: 1,
+				duration: 1,
+				ease: "power1.inOut",
+				onComplete: () => {
+					setCurrentIndex(upcomingIndex);
+					setIsAnimating(false);
+
+					if (backgroundVideoRef.current) {
+						backgroundVideoRef.current.src = getVideoSource(upcomingIndex);
+						backgroundVideoRef.current.play();
+					}
+
+					if (nextVideoRef.current) {
+						gsap.set(nextVideoRef.current, {
+							visibility: "hidden",
+							scale: 0.5,
+							width: "256px",
+							height: "256px",
+						});
+						nextVideoRef.current.src = getVideoSource(getUpcomingIndex());
+					}
+				},
+				}, "-=1"); // Start 1s before video expansion ends
+	};
 
 	useGSAP(() => {
 		gsap.set("#video-frame", {
-			clipPath: " polygon(14% 0%, 72% 0%, 90% 90%, 0% 100%)",
+			clipPath: "polygon(14% 0%, 72% 0%, 90% 90%, 0% 100%)",
 			borderRadius: "0 0 40% 10%",
 		});
 
 		gsap.from("#video-frame", {
-			clipPath: " polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+			clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
 			borderRadius: "0",
 			ease: "power1.inOut",
 			scrollTrigger: {
@@ -88,13 +117,12 @@ const Hero = () => {
 
 	useEffect(() => {
 		gsap.to(".hero__video--mask", {
-			scale: 1.2,
+			scale: 1.1,
 			duration: 1,
 			yoyo: true,
 			repeat: -1,
 			ease: "power1.inOut",
 		});
-
 	}, []);
 
 	return (
@@ -106,42 +134,47 @@ const Hero = () => {
 						<div className="three-body__dot"></div>
 						<div className="three-body__dot"></div>
 					</div>
-					<div className="absolute bottom-10 text-blue-900">Loading...{loadedVideos} / {totalVideos} </div>
+					<div className="absolute bottom-10 text-blue-900">
+						Loading...{loadedVideos} / {totalVideos}
+					</div>
 				</div>
 			)}
 
 			<div id="video-frame" className="hero__video">
+				{/* Mini video preview */}
 				<div className="hero__video--mask max-sm:size-30">
 					<div
 						onClick={handleMiniVideoClick}
 						className="origin-center sm:scale-50 sm:opacity-0 
-						transition-all duration-500 ease-in-out hover:scale-100 
-						hover:opacity-100 opacity-100 scale-100 "
+            transition-all duration-200 ease-in hover:scale-100 
+            hover:opacity-100 opacity-100 scale-100"
 					>
 						<video
-							ref={nextVideoRef}
-							src={getVideoSource(upcomingVideoIndex)}
+							ref={miniVideoRef}
+							src={getVideoSource(getUpcomingIndex())}
 							loop
 							muted
-							id="current-video"
-							className=" size-64 origin-center scale-150 object-cover pointer-events-none"
+							className="size-64 origin-center scale-150 object-cover pointer-events-none"
 							preload="auto"
 							playsInline
-							
 						></video>
 					</div>
 				</div>
+
+				{/* Animating video - now showing the same video as mini preview */}
 				<video
 					ref={nextVideoRef}
-					src={getVideoSource(currentIndex)}
+					src={getVideoSource(getUpcomingIndex())}
 					loop
 					muted
-					id="next-video"
 					className="absolute-center z-20 size-64 object-cover invisible pointer-events-none"
 					preload="auto"
 					playsInline
 				></video>
+
+				{/* Background video */}
 				<video
+					ref={backgroundVideoRef}
 					src={getVideoSource(currentIndex)}
 					autoPlay
 					loop
@@ -151,47 +184,29 @@ const Hero = () => {
 					preload="auto"
 					playsInline
 				></video>
-				{/* Preload on IOS */}
-				<video
-					src={getVideoSource(currentIndex + 1)}
-					autoPlay
-					loop
-					muted
-					className="invisible"
-					onLoadedData={handleVideoLoad}
-					preload="auto"
-					playsInline
-				></video>
-				<video
-					src={getVideoSource(currentIndex + 2)}
-					autoPlay
-					loop
-					muted
-					className="invisible "
-					onLoadedData={handleVideoLoad}
-					preload="auto"
-					playsInline
-				></video>
-				<video
-					src={getVideoSource(currentIndex + 3)}
-					autoPlay
-					loop
-					muted
-					className="invisible "
-					onLoadedData={handleVideoLoad}
-					preload="auto"
-					playsInline
-				></video>
 
-				<h1
-					className="special-font hero-heading absolute bottom-5 
-										right-5 z-40 text-blue-75 transition-all ease-in max-sm:px-5"
-				>
+				{/* Preload videos */}
+				{[1, 2, 3].map((offset) => (
+					<video
+						key={offset}
+						src={getVideoSource(currentIndex + offset)}
+						autoPlay
+						loop
+						muted
+						className="invisible"
+						onLoadedData={handleVideoLoad}
+						preload="auto"
+						playsInline
+					/>
+				))}
+
+				{/* Rest of your UI elements */}
+				<h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75 transition-all ease-in max-sm:px-5">
 					G<b>A</b>MING
 				</h1>
 
-				<div className="absolute left-0 top-0 z-40 size-full ">
-					<div className="mt-24 px-5 sm:px-10 ">
+				<div className="absolute left-0 top-0 z-40 size-full">
+					<div className="mt-24 px-5 sm:px-10">
 						<h1 className="special-font hero-heading text-blue-100">
 							redefi<b>n</b>e
 						</h1>
@@ -208,10 +223,7 @@ const Hero = () => {
 				</div>
 			</div>
 
-			<h1
-				className="special-font hero-heading absolute 
-									bottom-5 right-5 text-black max-sm:px-5"
-			>
+			<h1 className="special-font hero-heading absolute bottom-5 right-5 text-black max-sm:px-5">
 				G<b>A</b>MING
 			</h1>
 		</div>
