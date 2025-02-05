@@ -18,7 +18,8 @@ const About = () => {
 				},
 			});
 
-			clipAnimation.to(".mask-clip-path", {
+      // ให้ element ที่มี class .mask-clip-path ทำ animation โดยเปลี่ยนค่า width, height, borderRadius เมื่อ scroll
+			clipAnimation.to(".mask-clip-path", { 
 				width: "100vw",
 				height: "100vh",
 				borderRadius: 0,
