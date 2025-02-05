@@ -43,20 +43,21 @@ const Hero = () => {
 
 		const upcomingIndex = getUpcomingIndex();
 
-		 // Prepare next video without cloning
-        if (nextVideoRef.current) {
-            nextVideoRef.current.src = getVideoSource(upcomingIndex);
-            nextVideoRef.current.currentTime = 0;
-            nextVideoRef.current.play();
-        }
+		// Prepare next video without cloning
+		if (nextVideoRef.current) {
+			nextVideoRef.current.src = getVideoSource(upcomingIndex);
+			nextVideoRef.current.currentTime = 0;
+			nextVideoRef.current.play();
+		}
 
-		gsap.timeline()
-			.set(nextVideoRef.current, { 
+		gsap
+			.timeline()
+			.set(nextVideoRef.current, {
 				visibility: "visible",
 				scale: 0.5,
 				width: "256px",
 				height: "256px",
-				opacity: 0
+				opacity: 0,
 			})
 			.to(".hero__video--mask", {
 				scale: 0.7,
@@ -66,27 +67,31 @@ const Hero = () => {
 					if (miniVideoRef.current) {
 						miniVideoRef.current.src = getVideoSource(upcomingIndex + 1);
 					}
-				}
+				},
 			})
-			.to(nextVideoRef.current, {
-				scale: 1,
-				width: "100%",
-				height: "100%",
-				opacity: 1,
-				duration: 0.8,
-				ease: "power2.inOut",
-			}, "<")
+			.to(
+				nextVideoRef.current,
+				{
+					scale: 1,
+					width: "100%",
+					height: "100%",
+					opacity: 1,
+					duration: 0.8,
+					ease: "power2.inOut",
+				},
+				"<"
+			)
 			.add(() => {
 				// Sync background video with next video's current time
-                if (backgroundVideoRef.current && nextVideoRef.current) {
-                    const syncTime = nextVideoRef.current.currentTime;
-                    backgroundVideoRef.current.src = getVideoSource(upcomingIndex);
-                    backgroundVideoRef.current.onloadedmetadata = () => {
-                        backgroundVideoRef.current.currentTime = syncTime;
-                        backgroundVideoRef.current.play().catch(() => {});
-                        backgroundVideoRef.current.onloadedmetadata = null;
-                    };
-                }
+				if (backgroundVideoRef.current && nextVideoRef.current) {
+					const syncTime = nextVideoRef.current.currentTime;
+					backgroundVideoRef.current.src = getVideoSource(upcomingIndex);
+					backgroundVideoRef.current.onloadedmetadata = () => {
+						backgroundVideoRef.current.currentTime = syncTime;
+						backgroundVideoRef.current.play().catch(() => {});
+						backgroundVideoRef.current.onloadedmetadata = null;
+					};
+				}
 			}, "-=0.3") // Sync slightly before next video fades out
 			.to(nextVideoRef.current, {
 				opacity: 0,
@@ -105,13 +110,17 @@ const Hero = () => {
 						});
 						nextVideoRef.current.src = getVideoSource(getUpcomingIndex());
 					}
-				}
+				},
 			})
-			.to(".hero__video--mask", {
-				scale: 1,
-				duration: 0.3,
-				ease: "power2.out",
-			}, "-=0.3");
+			.to(
+				".hero__video--mask",
+				{
+					scale: 1,
+					duration: 0.3,
+					ease: "power2.out",
+				},
+				"-=0.3"
+			);
 	};
 
 	useGSAP(() => {
@@ -249,4 +258,3 @@ const Hero = () => {
 };
 
 export default Hero;
-

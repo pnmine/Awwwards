@@ -80,6 +80,20 @@
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     @apply top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] absolute z-100 size-32 cursor-pointer overflow-hidden rounded-lg ;
   }
+
+  .about__container{
+    @apply relative mb-8 mt-36 flex flex-col items-center gap-5;
+  }
+
+  .about__subtext {
+    @apply absolute bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-xs md:max-w-[24rem] text-gray-400;
+  }
+
+  .about__image {
+    @apply absolute left-1/2 top-0 z-20 h-[60vh] w-96 origin-center -translate-x-1/2 overflow-hidden rounded-3xl md:w-[30vw];
+  }
+
+  
 }
 
 /* utilities ใช้สำหรับ class ที่สามารถนำไปใช้ได้ทั่วไปในหลายๆ component ทำให้สามารถนำกลับมาใช้ซ้ำได้ง่าย*/

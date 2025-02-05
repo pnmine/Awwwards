@@ -1,11 +1,12 @@
 import React from "react";
 import Hero from "./components/Hero";
+import About from "./components/About";
 
 const App = () => {
 	return (
-		<main >
+		<main>
 			<Hero />
-			<section className="z-0 min-h-screen bg-blue-500"></section>
+			<About />
 		</main>
 	);
 };
